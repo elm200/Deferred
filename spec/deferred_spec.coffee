@@ -89,6 +89,109 @@ describe "Promise", ->
       pm._reject()
       expect(pm.state).toEqual("rejected")
 
+  describe "#then", ->
+    it "when promise is resolved", ->
+      x = []
+      task1 = ->
+        df = new md.Deferred()
+        delay 100, ->
+          x.push(1)
+          df.resolve()
+        df.promise()
+
+      oktask = ->
+        d = new Deferred()
+        delay 100, ->
+          x.push(2)
+          d.resolve()
+        d.promise()
+
+      task2 = -> x.push(3)
+
+      p1 = task1()
+      expect(p1.then).toBeDefined()
+
+      p2 = p1.then(oktask)
+      expect(p2.done).toBeDefined()
+
+      p2.done(task2)
+
+      delay 300, ->
+        expect(x).toEqual([1, 2, 3])
+
+    it "when promise is rejected", ->
+      x = []
+      task1 = ->
+        df = new md.Deferred()
+        delay 100, ->
+          x.push(1)
+          df.reject()
+        df.promise()
+
+      oktask = ->
+        d = new Deferred()
+        delay 100, ->
+          x.push(2)
+          d.resolve()
+        d.promise()
+
+      ngtask = ->
+        d = new Deferred()
+        delay 100, ->
+          x.push(-2)
+          d.reject()
+        d.promise()
+
+      task2 = -> x.push(3)
+
+      p1 = task1()
+      expect(p1.then).toBeDefined()
+
+      p2 = p1.then(oktask, ngtask)
+      expect(p2.done).toBeDefined()
+
+      p2.fail(task2)
+
+      delay 300, ->
+        expect(x).toEqual([1, -2, 3])
+
+    it "when promise is rejected and then recovered", ->
+      x = []
+      task1 = ->
+        df = new md.Deferred()
+        delay 100, ->
+          x.push(1)
+          df.reject()
+        df.promise()
+
+      oktask = ->
+        d = new Deferred()
+        delay 100, ->
+          x.push(2)
+          d.resolve()
+        d.promise()
+
+      ngtask = ->
+        d = new Deferred()
+        delay 100, ->
+          x.push(-2)
+          d.resolve()
+        d.promise()
+
+      task2 = -> x.push(3)
+      task3 = -> x.push(4)
+
+      p1 = task1()
+      expect(p1.then).toBeDefined()
+
+      p2 = p1.then(oktask, ngtask)
+      expect(p2.done).toBeDefined()
+
+      p2.fail(task2).done(task3)
+
+      delay 300, ->
+        expect(x).toEqual([1, -2, 4])
+
 describe "Deferred", ->
   beforeEach ->
     df = new md.Deferred()
@@ -139,7 +242,7 @@ describe "Deferred", ->
         p.done(f2)
         expect(x).toEqual([1, 2])
 
-     it "when a reject listener is added before rejected(normal case)", ->
+    it "when a reject listener is added before rejected(normal case)", ->
       x = []
       f1 = ->
         df = new md.Deferred()
@@ -155,7 +258,7 @@ describe "Deferred", ->
       delay 200, ->
         expect(x).toEqual([1, 2])
 
-     it "when a reject listener is added after rejected", ->
+    it "when a reject listener is added after rejected", ->
       x = []
       f1 = ->
         df = new md.Deferred()
@@ -170,4 +273,5 @@ describe "Deferred", ->
       delay 200, ->
         p.fail(f2)
         expect(x).toEqual([1, 2])
+
 

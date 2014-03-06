@@ -34,10 +34,20 @@ class Promise
         listener.call()
     this
 
-  then: (resolve_listener, reject_listener) ->
-    df = new Deferred()
-    @done(resolve_listener)
-    @fail(reject_listener)
+  then: (oktask, ngtask) ->
+    newdf = new Deferred()
+    @done ->
+      promise = oktask()
+      promise.done(newdf.resolve)
+      promise.fail(newdf.reject)
+
+    if ngtask?
+      @fail ->
+        promise = ngtask()
+        promise.done(newdf.resolve)
+        promise.fail(newdf.resolve)
+
+    newdf.promise()
 
 # protected
   _resolve: ->

@@ -5,9 +5,6 @@ class ListenerList
   add: (listener) ->
     @listeners.push(listener)
 
-  empty: ->
-    @listeners = []
-
   fire: ->
     listener.call() for listener in @listeners
 
@@ -27,6 +24,7 @@ class Promise
         @resolve_listeners.add(listener)
       when "resolved"
          listener.call()
+    this
 
   fail: (listener) ->
     switch @state
@@ -34,22 +32,25 @@ class Promise
         @reject_listeners.add(listener)
       when "rejected"
         listener.call()
+    this
+
+  then: (resolve_listener, reject_listener) ->
+    df = new Deferred()
+    @done(resolve_listener)
+    @fail(reject_listener)
 
 # protected
   _resolve: ->
-    @state = "resolved"
-    @resolve_listeners.fire()
-    @_empty_listeners()
+    switch @state
+      when "open"
+        @state = "resolved"
+        @resolve_listeners.fire()
 
-  _rejected: ->
-    @state = "rejected"
-    @reject_listeners.fire()
-    @_empty_listeners()
-
-# private
-  _empty_listeners: ->
-    @resolve_listeners.empty()
-    @reject_listeners.empty()
+  _reject: ->
+    switch @state
+      when "open"
+        @state = "rejected"
+        @reject_listeners.fire()
 
 class Deferred
   constructor: ->

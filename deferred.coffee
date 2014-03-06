@@ -68,25 +68,3 @@ class Deferred
 exports.ListenerList = ListenerList
 exports.Promise      = Promise
 exports.Deferred     = Deferred
-
-#delay = (ms, task) ->
-#  setTimeout task, ms
-#
-#task1 = ->
-#  d = new Deferred()
-#  delay 1000, ->
-#    console.log "task1!!"
-#    d.resolve()
-#  d.promise()
-#
-#task2 = ->
-#  d = new Deferred()
-#  delay 1000, ->
-#    console.log "task2!!"
-#    d.resolve()
-#  d.promise()
-#
-#task3 = ->
-#  console.log "task3!!"
-#
-#task1().done(task2)

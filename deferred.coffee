@@ -95,6 +95,7 @@ Deferred.when = (tasks...) ->
 
   newdf.promise()
 
-exports.ListenerList = ListenerList
-exports.Promise      = Promise
-exports.Deferred     = Deferred
+if exports?
+  exports.ListenerList = ListenerList
+  exports.Promise      = Promise
+  exports.Deferred     = Deferred

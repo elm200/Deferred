@@ -100,7 +100,7 @@ describe "Promise", ->
         df.promise()
 
       oktask = ->
-        d = new Deferred()
+        d = new md.Deferred()
         delay 100, ->
           x.push(2)
           d.resolve()
@@ -129,14 +129,14 @@ describe "Promise", ->
         df.promise()
 
       oktask = ->
-        d = new Deferred()
+        d = new md.Deferred()
         delay 100, ->
           x.push(2)
           d.resolve()
         d.promise()
 
       ngtask = ->
-        d = new Deferred()
+        d = new md.Deferred()
         delay 100, ->
           x.push(-2)
           d.reject()
@@ -165,14 +165,14 @@ describe "Promise", ->
         df.promise()
 
       oktask = ->
-        d = new Deferred()
+        d = new md.Deferred()
         delay 100, ->
           x.push(2)
           d.resolve()
         d.promise()
 
       ngtask = ->
-        d = new Deferred()
+        d = new md.Deferred()
         delay 100, ->
           x.push(-2)
           d.resolve()

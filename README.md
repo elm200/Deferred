@@ -16,7 +16,7 @@ Please feel free to contact me if you find any issues on my source code. Pull re
 
 [jQuery repository at Github](https://github.com/jquery/jquery)
 
-## License & Contact information.
+## License & Contact information
 
 This source code is MIT licensed.
 

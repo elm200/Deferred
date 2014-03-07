@@ -4,7 +4,7 @@
 
 jQuery.Deferred comes in handy when you want to handle nested asychronous tasks. Once I tried to decipher the source code of jQuery Deferred libraby only in vain because it looks so complicated. First, I was discouraged thinking that I was not smart enough to understand this sophisticated code. A few days later, however, I came to realize that jQuery Deferred might be unnecessarily complicated. So I decided to rewrite the Deferred library on my own using CoffeeScript.
 
-First, I took out Notify/Progress event for simplification. I also renamed class Callbacks to EventListenerList, which I believe better reflects its responsibilites. I attached jasmine tests so you can better understand how my small library works.
+First, I took out Notify/Progress event for simplification. I also renamed class Callbacks to ListenerList, which I believe better reflects its responsibilites. I attached jasmine tests so you can better understand how my small library works.
 
 ## How to use
 

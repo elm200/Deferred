@@ -274,4 +274,73 @@ describe "Deferred", ->
         p.fail(f2)
         expect(x).toEqual([1, 2])
 
+  describe ".when", ->
+    it "when all tasks are resolved", ->
+      x = []
 
+      task1 = ->
+        df = new md.Deferred()
+        df.resolve()
+        df.promise()
+
+      task2 = ->
+        d = new md.Deferred()
+        d.resolve()
+        d.promise()
+
+      task3 = -> x.push(3)
+      task4 = -> x.push(4)
+
+      p = md.Deferred.when(task1, task2)
+      expect(p.done).toBeDefined()
+      p.done(task3).fail(task4)
+
+      expect(x).toEqual([3])
+
+    it "when one of the tasks is rejected", ->
+      x = []
+
+      task1 = ->
+        df = new md.Deferred()
+        df.resolve()
+        df.promise()
+
+      task2 = ->
+        d = new md.Deferred()
+        d.reject()
+        d.promise()
+
+      task3 = -> x.push(3)
+      task4 = -> x.push(4)
+
+      p = md.Deferred.when(task1, task2)
+      expect(p.done).toBeDefined()
+      p.done(task3).fail(task4)
+
+      expect(x).toEqual([4])
+
+    it "when all the tasks are resolved asynchronically", ->
+      x = []
+
+      task1 = ->
+        df = new md.Deferred()
+        delay 150, ->
+          x.push(1)
+          df.resolve()
+        df.promise()
+
+      task2 = ->
+        d = new md.Deferred()
+        delay 200, ->
+          x.push(2)
+          d.resolve()
+        d.promise()
+
+      task3 = -> x.push(3)
+      task4 = -> x.push(4)
+
+      p = md.Deferred.when(task1, task2)
+      expect(p.done).toBeDefined()
+      p.done(task3).fail(task4)
+      delay 250, ->
+        expect(x).toEqual([1, 2, 3])

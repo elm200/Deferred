@@ -23,7 +23,7 @@ class Promise
       when "open"
         @resolve_listeners.add(listener)
       when "resolved"
-         listener.call()
+        listener.call()
     this
 
   fail: (listener) ->
@@ -36,6 +36,7 @@ class Promise
 
   then: (oktask, ngtask) ->
     newdf = new Deferred()
+
     @done ->
       promise = oktask()
       promise.done(newdf.resolve)
@@ -74,6 +75,25 @@ class Deferred
 
   promise: ->
     @_promise
+
+Deferred.when = (tasks...) ->
+  newdf = new Deferred()
+  tasks_yet_resolved = tasks.length
+
+  resolve_handler = ->
+    tasks_yet_resolved -= 1
+    if tasks_yet_resolved == 0
+      newdf.resolve()
+
+  reject_handler = ->
+    newdf.reject()
+
+  tasks.forEach (task) ->
+    promise = task()
+    promise.done(resolve_handler)
+    promise.fail(reject_handler)
+
+  newdf.promise()
 
 exports.ListenerList = ListenerList
 exports.Promise      = Promise

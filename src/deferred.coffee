@@ -99,3 +99,8 @@ if exports?
   exports.ListenerList = ListenerList
   exports.Promise      = Promise
   exports.Deferred     = Deferred
+else if window?
+  window.ListenerList = ListenerList
+  window.Promise      = Promise
+  window.Deferred     = Deferred
+

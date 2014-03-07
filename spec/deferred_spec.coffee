@@ -1,4 +1,4 @@
-md = require('../deferred.coffee')
+md = require('../src/deferred.coffee')
 
 ll = null
 pm = null

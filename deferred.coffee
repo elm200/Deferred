@@ -78,11 +78,11 @@ class Deferred
 
 Deferred.when = (tasks...) ->
   newdf = new Deferred()
-  tasks_yet_resolved = tasks.length
+  tasks_unresolved = tasks.length
 
   resolve_handler = ->
-    tasks_yet_resolved -= 1
-    if tasks_yet_resolved == 0
+    tasks_unresolved -= 1
+    if tasks_unresolved == 0
       newdf.resolve()
 
   reject_handler = ->
